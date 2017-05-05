@@ -1,0 +1,55 @@
+function myFunction() {
+  // get the spreadsheet object
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  // set the first sheet as active
+ //SpreadsheetApp.setActiveSheet(spreadsheet.getSheets()[0]);
+  // fetch this sheet
+  var sheet = spreadsheet.getSheetByName('Sheet1');
+  var sheet2 = spreadsheet.getSheetByName('Sheet2');
+  
+  
+// Get date from UTC +11 for the Wednesday but script is ran Tuesday morning at 9AM EST
+  //var dateplus = Utilities.formatDate(new Date(), "NZ",  "M/d/yy") ;
+  //Testing
+ var dateplus = Utilities.formatDate(new Date(), "NZ",  "M/d/yyyy") ;
+ var datez = new Date(dateplus);
+
+
+ 
+ // Find row of tomorrows date
+  var data = sheet.getDataRange().getValues();  
+  var rowval = ArrayLib.find(data, 0, datez); 
+  
+//Only run if row is found and then add 1 to the row number  
+  if (rowval >= 0) {
+  var row = rowval +1;
+// name of individuals watching bags
+  var name1 = sheet.getRange([row],[2]).getValue();
+  var name2 = sheet.getRange([row],[4]).getValue();
+// email stored into var
+  var email1 = sheet.getRange([row],[3]).getValue();
+  var email2 = sheet.getRange([row],[5]).getValue();
+
+//email subject and message 
+  var subject = "Gear Watch for NOVEMBER PROJECT Reminder";
+  var message1 = "Hello " + name1 + ","+'\n'+'\n'+ "Thank you for volunteering to watch your fellow NPers' gear tomorrow @ 525AM."+'\n'+'\n'+"Have an epic day! F*yeah! See you there.";
+  var message2 = "Hello " + name2 + ","+'\n'+'\n'+ "Thank you for volunteering to watch your fellow NPers' gear tomorrow @ 620AM."+'\n'+'\n'+"Have an epic day! F*yeah! See you there.";
+  var message3 = "YO Leaders" + ","+'\n'+'\n'+ name1 + " is watching at 525AM and " + name2 + " is watching at 620AM!"+'\n'+'\n'+"Have an epic day! F*yeah! See you there.";
+
+//email function
+    if (email1 != ''){ 
+      MailApp.sendEmail(email1,subject, message1);}
+    if (email2 != ''){
+      MailApp.sendEmail(email2,subject, message2);}
+  MailApp.sendEmail('novprojectdc@gmail.com','Email Reminders were sent to users', message3);
+  MailApp.sendEmail('timothy.murphy@ai-solutions.com','Email Reminders were sent to users', message3);
+
+  }
+  else {
+    var Fail = "fail"
+    MailApp.sendEmail('timothy.murphy@ai-solutions.com','NP Script Failed - Live','Your script failed');
+
+  }
+  
+}
+
